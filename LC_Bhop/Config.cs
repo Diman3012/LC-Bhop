@@ -6,19 +6,18 @@ namespace lcbhop
     {
         private readonly ConfigFile config;
 
-        public bool modEnabled { get; set; } = true; // Глобальный переключатель мода
-        public bool autobhop { get; set; }
-        public bool speedometer { get; set; }
-        public bool enablebunnyhopping { get; set; }
+        public ConfigEntry<bool> modEnabled; 
+        public ConfigEntry<bool> autobhop;
+        public ConfigEntry<bool> speedometer;
+        public ConfigEntry<bool> enablebunnyhopping;
 
-        // MoveVars
-        public float gravity { get; set; }
-        public float friction { get; set; }
-        public float maxspeed { get; set; }
-        public float movespeed { get; set; }
-        public float accelerate { get; set; }
-        public float airaccelerate { get; set; }
-        public float stopspeed { get; set; }
+        public ConfigEntry<float> gravity;
+        public ConfigEntry<float> friction;
+        public ConfigEntry<float> maxspeed;
+        public ConfigEntry<float> movespeed;
+        public ConfigEntry<float> accelerate;
+        public ConfigEntry<float> airaccelerate;
+        public ConfigEntry<float> stopspeed;
 
         public Config(ConfigFile cfg)
         {
@@ -27,17 +26,21 @@ namespace lcbhop
 
         public void Init()
         {
-            autobhop = config.Bind("General", "Auto Bhop", true, "Disabling rebinds jump to scroll, needs ItemQuickSwitch mod!").Value;
-            speedometer = config.Bind("General", "Speedometer", false, "Enables speedometer HUD.").Value;
-            enablebunnyhopping = config.Bind("General", "Enable bunnyhopping", false, "Disables the speed cap.").Value;
-
-            gravity = config.Bind("Move Vars", "Gravity", 800.0f, "Gravity.").Value;
-            friction = config.Bind("Move Vars", "Friction", 4.0f, "Ground friction.").Value;
-            maxspeed = config.Bind("Move Vars", "Max Speed", 320.0f, "Max speed per tick.").Value;
-            movespeed = config.Bind("Move Vars", "Move Speed", 250.0f, "Ground speed (like cl_forwardspeed etc.).").Value;
-            accelerate = config.Bind("Move Vars", "Accelerate", 5.0f, "Ground acceleration.").Value;
-            airaccelerate = config.Bind("Move Vars", "Air Accelerate", 10.0f, "Air acceleration.").Value;
-            stopspeed = config.Bind("Move Vars", "Stop Speed", 75.0f, "Ground deceleration.").Value;
+            modEnabled = config.Bind("General", "ModEnabled", false, "Глобальный переключатель мода.");
+            autobhop = config.Bind("General", "Auto Bhop", true, "Авто-прыжок при зажатом пробеле.");
+            speedometer = config.Bind("General", "Speedometer", false, "Спидометр.");
+            
+            // Версия v4: лимит 1500 и ускорение 150
+            enablebunnyhopping = config.Bind("Movement v4", "Enable bunnyhopping", true, "Отключение лимита скорости.");
+            gravity = config.Bind("Movement v4", "Gravity", 800.0f, "Гравитация.");
+            friction = config.Bind("Movement v4", "Friction", 4.0f, "Трение.");
+            maxspeed = config.Bind("Movement v4", "Max Speed", 1500.0f, "Максимальный лимит (1500).");
+            movespeed = config.Bind("Movement v4", "Move Speed", 250.0f, "Базовая скорость.");
+            accelerate = config.Bind("Movement v4", "Accelerate", 5.0f, "Ускорение на земле.");
+            
+            // Увеличили со 100 до 150 для более быстрого набора
+            airaccelerate = config.Bind("Movement v4", "Air Accelerate", 150.0f, "Ускорение в воздухе.");
+            stopspeed = config.Bind("Movement v4", "Stop Speed", 75.0f, "Скорость остановки.");
         }
     }
 }

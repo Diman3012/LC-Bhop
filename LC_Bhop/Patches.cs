@@ -12,7 +12,7 @@ namespace lcbhop
         [HarmonyPrefix]
         internal static bool Prefix(ref Vector3 motion)
         {
-            if (!Plugin.cfg.modEnabled) return true; // Игнорируем патч, если мод выключен
+            if (!Plugin.cfg.modEnabled.Value) return true; // Используем .Value
             return !Plugin.patchMove;
         }
     }
@@ -23,7 +23,7 @@ namespace lcbhop
         [HarmonyPrefix]
         internal static bool Prefix(PlayerControllerB __instance, ref InputAction.CallbackContext context)
         {
-            if (!Plugin.cfg.modEnabled) return true;
+            if (!Plugin.cfg.modEnabled.Value) return true; // Используем .Value
 
             if (!context.performed) return false;
             if (__instance.quickMenuManager.isMenuOpen) return false;
@@ -41,7 +41,7 @@ namespace lcbhop
         [HarmonyPrefix]
         internal static bool Prefix(ref InputAction.CallbackContext context)
         {
-            if (!Plugin.cfg.modEnabled) return true;
+            if (!Plugin.cfg.modEnabled.Value) return true; // Используем .Value
 
             Plugin.player.wishJump = true;
             return !Plugin.patchJump;
@@ -54,8 +54,8 @@ namespace lcbhop
         [HarmonyPrefix]
         internal static bool Prefix(ref InputAction.CallbackContext context)
         {
-            if (!Plugin.cfg.modEnabled) return true;
-            return Plugin.cfg.autobhop;
+            if (!Plugin.cfg.modEnabled.Value) return true; // Используем .Value
+            return Plugin.cfg.autobhop.Value;
         }
     }
 
@@ -69,11 +69,11 @@ namespace lcbhop
 
             if (text.StartsWith("/autobhop"))
             {
-                Plugin.cfg.autobhop = !Plugin.cfg.autobhop;
+                Plugin.cfg.autobhop.Value = !Plugin.cfg.autobhop.Value;
             }
             else if (text.StartsWith("/speedo"))
             {
-                Plugin.cfg.speedometer = !Plugin.cfg.speedometer;
+                Plugin.cfg.speedometer.Value = !Plugin.cfg.speedometer.Value;
             }
             else
             {

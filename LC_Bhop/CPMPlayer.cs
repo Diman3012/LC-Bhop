@@ -15,13 +15,14 @@ namespace lcbhop
 
     public class CPMPlayer : MonoBehaviour
     {
-        public float gravity = Plugin.cfg.gravity;
-        public float friction = Plugin.cfg.friction;
-        public float maxspeed = Plugin.cfg.maxspeed;
-        public float movespeed = Plugin.cfg.movespeed;
-        public float accelerate = Plugin.cfg.accelerate;
-        public float airaccelerate = Plugin.cfg.airaccelerate;
-        public float stopspeed = Plugin.cfg.stopspeed;
+        // Читаем значения через .Value
+        public float gravity => Plugin.cfg.gravity.Value;
+        public float friction => Plugin.cfg.friction.Value;
+        public float maxspeed => Plugin.cfg.maxspeed.Value;
+        public float movespeed => Plugin.cfg.movespeed.Value;
+        public float accelerate => Plugin.cfg.accelerate.Value;
+        public float airaccelerate => Plugin.cfg.airaccelerate.Value;
+        public float stopspeed => Plugin.cfg.stopspeed.Value;
 
         public PlayerControllerB player;
         private CharacterController _controller;
@@ -38,15 +39,12 @@ namespace lcbhop
 
         private void Update()
         {
-            // Переключение мода по F1
             if (Keyboard.current.f1Key.wasPressedThisFrame)
             {
-                Plugin.cfg.modEnabled = !Plugin.cfg.modEnabled;
+                Plugin.cfg.modEnabled.Value = !Plugin.cfg.modEnabled.Value;
+                HUDManager.Instance?.DisplayTip("LC Bhop", Plugin.cfg.modEnabled.Value ? "Enabled" : "Disabled");
 
-                // Визуальное уведомление в игре
-                HUDManager.Instance?.DisplayTip("LC Bhop", Plugin.cfg.modEnabled ? "Enabled" : "Disabled");
-
-                if (!Plugin.cfg.modEnabled)
+                if (!Plugin.cfg.modEnabled.Value)
                 {
                     Plugin.patchMove = false;
                     Plugin.patchJump = false;
@@ -54,8 +52,7 @@ namespace lcbhop
                 }
             }
 
-            // Если мод выключен, ничего не делаем
-            if (!Plugin.cfg.modEnabled) return;
+            if (!Plugin.cfg.modEnabled.Value) return;
 
             player.fallValue = 0.0f;
             player.fallValueUncapped = 0.0f;
@@ -93,7 +90,7 @@ namespace lcbhop
             wishJump = false;
 
             /* Speedometer */
-            if (Plugin.cfg.speedometer)
+            if (Plugin.cfg.speedometer.Value)
             {
                 if (!compass)
                 {
@@ -122,7 +119,7 @@ namespace lcbhop
 
         private void Jump()
         {
-            if (Plugin.cfg.autobhop)
+            if (Plugin.cfg.autobhop.Value)
                 wishJump = player.playerActions.Movement.Jump.ReadValue<float>() > 0.0f;
             else
             {
@@ -130,7 +127,8 @@ namespace lcbhop
                     wishJump = player.playerActions.Movement.SwitchItem.ReadValue<float>() != 0.0f;
             }
 
-            if (!Plugin.cfg.enablebunnyhopping)
+            // Проверяем конфиг, если включен баннихоп - не тормозим игрока
+            if (!Plugin.cfg.enablebunnyhopping.Value)
                 PreventMegaBunnyJumping();
         }
 
@@ -149,7 +147,6 @@ namespace lcbhop
 
             if (wishspeed > maxspeed)
             {
-                wishvel *= maxspeed / wishspeed;
                 wishspeed = maxspeed;
             }
 
@@ -157,6 +154,37 @@ namespace lcbhop
             velocity.y -= gravity * Time.deltaTime;
         }
 
+        private void AirAccelerate(Vector3 wishdir, float wishspeed, float accel)
+        {
+            float addspeed, accelspeed, currentspeed;
+
+            // КЛЮЧЕВОЕ ИЗМЕНЕНИЕ: 
+            // Ограничение wishspd до 30 — это "золотой стандарт" HL. 
+            // Именно это делает разгон плавным, а не мгновенным.
+            float wishspd = wishspeed;
+            if (wishspd > 75f) wishspd = 75f;
+
+            currentspeed = Vector3.Dot(velocity, wishdir);
+            addspeed = wishspd - currentspeed;
+
+            if (addspeed <= 0) return;
+
+            accelspeed = accel * wishspeed * Time.deltaTime;
+
+            if (accelspeed > addspeed) accelspeed = addspeed;
+
+            velocity.x += accelspeed * wishdir.x;
+            velocity.z += accelspeed * wishdir.z;
+
+            // Жесткое ограничение итоговой горизонтальной скорости до 1500
+            Vector3 horizVel = new Vector3(velocity.x, 0, velocity.z);
+            if (horizVel.magnitude > maxspeed)
+            {
+                horizVel = horizVel.normalized * maxspeed;
+                velocity.x = horizVel.x;
+                velocity.z = horizVel.z;
+            }
+        }
         private void WalkMove()
         {
             Vector3 wishvel;
@@ -181,7 +209,7 @@ namespace lcbhop
 
             if (wishJump)
             {
-                velocity.y = 295;
+                velocity.y = 295; // Сила прыжка
             }
         }
 
@@ -216,20 +244,6 @@ namespace lcbhop
             addspeed = wishspeed - currentspeed;
             if (addspeed <= 0) return;
             accelspeed = accel * Time.deltaTime * wishspeed;
-            if (accelspeed > addspeed) accelspeed = addspeed;
-            velocity.x += accelspeed * wishdir.x;
-            velocity.z += accelspeed * wishdir.z;
-        }
-
-        private void AirAccelerate(Vector3 wishdir, float wishspeed, float accel)
-        {
-            float addspeed, accelspeed, currentspeed;
-            float wishspd = wishspeed;
-            if (wishspd > 30) wishspd = 30;
-            currentspeed = Vector3.Dot(velocity, wishdir);
-            addspeed = wishspd - currentspeed;
-            if (addspeed <= 0) return;
-            accelspeed = accel * wishspeed * Time.deltaTime;
             if (accelspeed > addspeed) accelspeed = addspeed;
             velocity.x += accelspeed * wishdir.x;
             velocity.z += accelspeed * wishdir.z;
