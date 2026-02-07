@@ -11,35 +11,36 @@
 ---
 
 <details open>
-<summary><b>🇬🇧 English Description (Click to expand)</b></summary>
+<summary><b>🇷🇺 English description (Click to expand)</b></summary>
 
-> 🧩 This mod is based on [lcbhop](https://github.com/aIIison/lcbhop) by **aIIison**.
-> It implements classic Quake/Half-Life movement physics (CPM) directly into Lethal Company by overriding the default character controller [cite: Patches.cs].
+> 🧩 This mod is based on the [lcbhop](https://github.com/aIIison/lcbhop) project by **aIIison**.
+> It implements classic Quake/Half-Life movement physics (CPM) in Lethal Company, completely replacing the standard movement logic [cite: Patches.cs].
 
 ## ✨ Features
-* **CPM Physics:** Authentic Air Accelerate and Friction mechanics from the GoldSrc/Source engines [cite: CPMPlayer.cs].
-* **Auto Bhop:** Hold the jump key to automatically time your jumps perfectly [cite: CPMPlayer.cs].
-* **Speedometer:** A HUD element (repurposed Compass UI) showing your horizontal velocity in real-time [cite: CPMPlayer.cs].
-* **Movement Freedom:** Disables fall damage and provides infinite stamina for an uninterrupted flow [cite: CPMPlayer.cs].
-* **Dynamic Speed Cap:** Optional "Bunnyhopping" mode in config to remove or scale the game's default speed limits [cite: Config.cs, CPMPlayer.cs].
-* **Toggleable:** Enable or disable the mod instantly with a hotkey [cite: CPMPlayer.cs].
-* **Scroll Jump:** If Auto Bhop is disabled, jumping is remapped to the mouse wheel (ideal for use with `ItemQuickSwitch`) [cite: Patches.cs].
+* **CPM Physics:** Authentic air acceleration and friction from GoldSrc/Source engines [cite: CPMPlayer.cs].
+* **Auto-hop:** Hold the jump key for automatic perfect hopping [cite: CPMPlayer.cs].
+* **Speedometer:** An interface element (uses the standard Compass) that displays the current horizontal speed [cite: CPMPlayer.cs].
+* **Full Freedom:** Disables fall damage and stamina consumption [cite: CPMPlayer.cs].
+* **Limit settings:** The “Bunnyhopping” option in the config allows you to remove the speed limit (default 1.7x the maximum) [cite: Config.cs, CPMPlayer.cs].
+* **Instant switching:** Turn the mod on and off directly in the match with a single key [cite: CPMPlayer.cs].
+* **Wheel jump:** If auto-hop is disabled, the jump is automatically bound to mouse scrolling [cite: Patches.cs].
 
-## 🎮 Controls & Commands
+
+
+## 🎮 Controls and Commands
 | Action | Input | Description |
 | :--- | :--- | :--- |
-| **Toggle Mod** | `F1` | Completely enable/disable the mod physics and HUD in-game [cite: CPMPlayer.cs] |
-| **Jump** | `Space` / `Scroll` | Standard jump or mouse wheel (if Auto Bhop is OFF) [cite: CPMPlayer.cs, Patches.cs] |
-| **Toggle Auto Bhop** | `/autobhop` | Chat command to switch jump modes [cite: Patches.cs] |
-| **Toggle Speedo** | `/speedo` | Chat command to show/hide the speedometer [cite: Patches.cs] |
+| **Enable/Disable Mod** | `F1` | Instantly activates or deactivates mod physics |
+| **Jump** | `Space` / `Scroll` | Standard jump or mouse wheel (if Auto Bhop is off) |
+| **Command: Auto Bhop** | `/autobhop` | Toggle auto-jump mode via chat |
+| **Command: Speedometer** | `/speedo` | Hide or show the speedometer |
 
-## 🛠️ Configuration
-All movement variables can be adjusted in `lcbhop.cfg` [cite: Config.cs]:
-* `Gravity`: Default 800.0 [cite: Config.cs]
-* `Friction`: Default 4.0 [cite: Config.cs]
-* `Max Speed`: Max horizontal speed per tick (320.0) [cite: Config.cs]
-* `Air Accelerate`: Default 10.0 [cite: Config.cs]
-* `Enable bunnyhopping`: Set to `true` to remove the 1.7x speed cap [cite: Config.cs].
+## 🛠️ Configuration (Movement v4)
+Settings are stored in `lcbhop.cfg`. Default values for version v4:
+* `Max Speed`: **1500.0** — Horizontal speed limit.
+* `Air Accelerate`: **150.0** — Acceleration speed in the air.
+* `Gravity`: **800.0** — Standard gravity.
+* `Friction`: **4.0** — Friction force against the ground.
 
 </details>
 
@@ -63,18 +64,17 @@ All movement variables can be adjusted in `lcbhop.cfg` [cite: Config.cs]:
 ## 🎮 Управление и команды
 | Действие | Ввод | Описание |
 | :--- | :--- | :--- |
-| **Вкл/Выкл Мод** | `F1` | Полное включение/выключение физики и спидометра [cite: CPMPlayer.cs] |
-| **Прыжок** | `Space` / `Колесо` | Прыжок или колесико мыши (если Автохоп ВЫКЛ) [cite: CPMPlayer.cs, Patches.cs] |
-| **Переключить Автохоп** | `/autobhop` | Команда в чате для смены режима прыжков [cite: Patches.cs] |
-| **Переключить Спидометр** | `/speedo` | Команда в чате для показа/скрытия скорости [cite: Patches.cs] |
+| **Вкл/Выкл Мод** | `F1` | Мгновенно активирует или деактивирует физику мода |
+| **Прыжок** | `Space` / `Scroll` | Стандартный прыжок или колесико мыши (если Auto Bhop выключен) |
+| **Команда: Автохоп** | `/autobhop` | Переключить режим авто-прыжка через чат |
+| **Команда: Спидометр** | `/speedo` | Скрыть или показать спидометр |
 
-## 🛠️ Настройка
-Параметры движения настраиваются в файле `lcbhop.cfg` [cite: Config.cs]:
-* `Gravity`: Гравитация (стандарт: 800.0) [cite: Config.cs]
-* `Friction`: Трение о землю (стандарт: 4.0) [cite: Config.cs]
-* `Max Speed`: Максимальная скорость за тик (стандарт: 320.0) [cite: Config.cs]
-* `Air Accelerate`: Ускорение в воздухе (стандарт: 10.0) [cite: Config.cs]
-* `Enable bunnyhopping`: Установите `true`, чтобы снять ограничение скорости в 1.7x [cite: Config.cs].
+## 🛠️ Конфигурация (Movement v4)
+Настройки хранятся в `lcbhop.cfg`. Значения по умолчанию для версии v4:
+* `Max Speed`: **1500.0** — Лимит горизонтальной скорости.
+* `Air Accelerate`: **150.0** — Скорость набора разгона в воздухе.
+* `Gravity`: **800.0** — Стандартная сила тяжести.
+* `Friction`: **4.0** — Сила трения о землю.
 
 </details>
 
