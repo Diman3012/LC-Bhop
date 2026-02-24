@@ -18,6 +18,7 @@ namespace lcbhop
         public ConfigEntry<float> accelerate;
         public ConfigEntry<float> airaccelerate;
         public ConfigEntry<float> stopspeed;
+        public ConfigEntry<float> jumpForce;
 
         public Config(ConfigFile cfg)
         {
@@ -37,7 +38,8 @@ namespace lcbhop
             maxspeed = config.Bind("Movement v4", "Max Speed", 1500.0f, "Максимальный лимит (1500).");
             movespeed = config.Bind("Movement v4", "Move Speed", 250.0f, "Базовая скорость.");
             accelerate = config.Bind("Movement v4", "Accelerate", 5.0f, "Ускорение на земле.");
-            
+            jumpForce = config.Bind("Movement v4", "Jump Force", 295.0f, "Сила прыжка (стандарт 295).");
+
             // Увеличили со 100 до 150 для более быстрого набора
             airaccelerate = config.Bind("Movement v4", "Air Accelerate", 150.0f, "Ускорение в воздухе.");
             stopspeed = config.Bind("Movement v4", "Stop Speed", 75.0f, "Скорость остановки.");

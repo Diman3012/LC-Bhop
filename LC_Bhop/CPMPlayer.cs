@@ -1,4 +1,4 @@
-using System.Reflection;
+п»їusing System.Reflection;
 using GameNetcodeStuff;
 using TMPro;
 using UnityEngine;
@@ -15,7 +15,7 @@ namespace lcbhop
 
     public class CPMPlayer : MonoBehaviour
     {
-        // Читаем значения через .Value
+        // Р§РёС‚Р°РµРј Р·РЅР°С‡РµРЅРёСЏ С‡РµСЂРµР· .Value
         public float gravity => Plugin.cfg.gravity.Value;
         public float friction => Plugin.cfg.friction.Value;
         public float maxspeed => Plugin.cfg.maxspeed.Value;
@@ -23,6 +23,7 @@ namespace lcbhop
         public float accelerate => Plugin.cfg.accelerate.Value;
         public float airaccelerate => Plugin.cfg.airaccelerate.Value;
         public float stopspeed => Plugin.cfg.stopspeed.Value;
+        public float jumpForce => Plugin.cfg.jumpForce.Value;
 
         public PlayerControllerB player;
         private CharacterController _controller;
@@ -127,7 +128,7 @@ namespace lcbhop
                     wishJump = player.playerActions.Movement.SwitchItem.ReadValue<float>() != 0.0f;
             }
 
-            // Проверяем конфиг, если включен баннихоп - не тормозим игрока
+            // РџСЂРѕРІРµСЂСЏРµРј РєРѕРЅС„РёРі, РµСЃР»Рё РІРєР»СЋС‡РµРЅ Р±Р°РЅРЅРёС…РѕРї - РЅРµ С‚РѕСЂРјРѕР·РёРј РёРіСЂРѕРєР°
             if (!Plugin.cfg.enablebunnyhopping.Value)
                 PreventMegaBunnyJumping();
         }
@@ -158,10 +159,11 @@ namespace lcbhop
         {
             float addspeed, accelspeed, currentspeed;
 
-            // КЛЮЧЕВОЕ ИЗМЕНЕНИЕ: 
-            // Ограничение wishspd до 30 — это "золотой стандарт" HL. 
-            // Именно это делает разгон плавным, а не мгновенным.
             float wishspd = wishspeed;
+
+            // Р’РјРµСЃС‚Рѕ Р¶РµСЃС‚РєРёС… 75f РёСЃРїРѕР»СЊР·СѓРµРј РґРёРЅР°РјРёС‡РµСЃРєРѕРµ РѕРіСЂР°РЅРёС‡РµРЅРёРµ.
+            // РћР±С‹С‡РЅРѕ РІ bй•·hop СЌС‚Рѕ 30.0f РёР»Рё РѕРєРѕР»Рѕ 1/3 РѕС‚ Р±Р°Р·РѕРІРѕР№ СЃРєРѕСЂРѕСЃС‚Рё.
+            // Р•СЃР»Рё С…РѕС‚РёС‚Рµ РїРѕР»РЅСѓСЋ СЃРІРѕР±РѕРґСѓ вЂ” Р·Р°РєРѕРјРјРµРЅС‚РёСЂСѓР№С‚Рµ СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂРѕРєСѓ.
             if (wishspd > 75f) wishspd = 75f;
 
             currentspeed = Vector3.Dot(velocity, wishdir);
@@ -176,7 +178,7 @@ namespace lcbhop
             velocity.x += accelspeed * wishdir.x;
             velocity.z += accelspeed * wishdir.z;
 
-            // Жесткое ограничение итоговой горизонтальной скорости до 1500
+            // РРЎРџРћР›Р¬Р—РЈР•Рњ maxspeed РР— РљРћРќР¤РР“Рђ Р’РњР•РЎРўРћ 1500
             Vector3 horizVel = new Vector3(velocity.x, 0, velocity.z);
             if (horizVel.magnitude > maxspeed)
             {
@@ -209,7 +211,11 @@ namespace lcbhop
 
             if (wishJump)
             {
-                velocity.y = 295; // Сила прыжка
+                velocity.y = 295; // РЎРёР»Р° РїСЂС‹Р¶РєР°
+            }
+            if (wishJump)
+            {
+                velocity.y = jumpForce; // РСЃРїРѕР»СЊР·СѓРµРј Р·РЅР°С‡РµРЅРёРµ РёР· РєРѕРЅС„РёРіР° РІРјРµСЃС‚Рѕ 295
             }
         }
 
